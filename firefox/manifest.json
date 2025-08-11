@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Intellify",
-  "version": "1.1.8",
+  "version": "1.2.0",
   "description": "A browser extension to supercharge your browser with AI features",
   "permissions": [
     "activeTab",
@@ -12,16 +12,7 @@
     "<all_urls>"
   ],
   "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icon.png",
-      "48": "icon.png"
-    }
-  },
-  "icons": {
-    "16": "icon.png",
-    "48": "icon.png",
-    "128": "icon.png"
+    "default_popup": "popup.html"
   },
   "background": {
     "scripts": [
@@ -46,5 +37,10 @@
         "content.js"
       ]
     }
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "intellify@your-extension.com"
+    }
+  }
 }

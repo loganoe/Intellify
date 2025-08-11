@@ -29,16 +29,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Save the API key to storage
 // Save the API key to storage
-saveApiKeyButton.addEventListener('click', function () {
+saveApiKeyButton.addEventListener('click', async function () {
     const apiKey = apiKeyInput.value.trim();
     if (apiKey) {
         statusMessage.textContent = 'Saving...';
-        saveApiKeyButton.disabled = true; // Disable the button to prevent multiple clicks
-        
-        browser.storage.sync.set({ 'geminiApiKey': apiKey }, function () {
+        saveApiKeyButton.disabled = true; // Prevents multiple clicks
+        try {
+            await browser.storage.sync.set({ 'geminiApiKey': apiKey });
             statusMessage.textContent = 'API key saved!';
-            saveApiKeyButton.disabled = false; // Re-enable the button
-        });
+        } catch (error) {
+            statusMessage.textContent = `Error saving key: ${error.message}`;
+            console.error(error);
+        } finally {
+            saveApiKeyButton.disabled = false; // Re-enables the button
+        }
     } else {
         statusMessage.textContent = 'Please enter a valid API key.';
     }
@@ -71,7 +75,16 @@ saveApiKeyButton.addEventListener('click', function () {
             });
         });
     });
-
+    // New: Handle "Enter" key press to submit the question
+    questionInput.addEventListener('keydown', function(event) {
+        // Check if the pressed key is "Enter"
+        if (event.key === 'Enter') {
+            // Prevent the default action (e.g., new line in a textarea)
+            event.preventDefault();
+            // Trigger the click event on the askButton
+            askButton.click();
+        }
+    });
     // Function to call the Gemini API
     async function askGemini(apiKey, pageContent, question) {
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
